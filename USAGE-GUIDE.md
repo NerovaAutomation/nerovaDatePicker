@@ -88,12 +88,14 @@ That's it! The calendar picker automatically initializes on all inputs with the 
 | `data-disabled-dates` | Block specific dates | `data-disabled-dates="12/25/2024,01/01/2025"` | Grays out Christmas & New Year |
 | `data-disabled-days` | Block days of week | `data-disabled-days="0,6"` | Blocks Sundays (0) & Saturdays (6) |
 | `data-business-days-only` | Only weekdays | `data-business-days-only="true"` | Blocks weekends automatically |
+| `data-no-past-dates` | Block all past dates | `data-no-past-dates="true"` | Disables dates before today |
 
 ```html
 <!-- Disabled examples -->
 <input data-calendar data-disabled-dates="12/25/2024,12/26/2024">
 <input data-calendar data-disabled-days="0,6">
 <input data-calendar data-business-days-only="true">
+<input data-calendar data-no-past-dates="true">
 ```
 
 **Day Numbers:** Sunday=0, Monday=1, Tuesday=2, Wednesday=3, Thursday=4, Friday=5, Saturday=6
@@ -191,14 +193,19 @@ Override colors using CSS custom properties:
 <input data-calendar data-auto-default="true">
 ```
 
-### 4. Date Range (This Year Only)
+### 4. Future Dates Only
+```html
+<input data-calendar data-no-past-dates="true">
+```
+
+### 5. Date Range (This Year Only)
 ```html
 <input data-calendar 
        data-min-date="01/01/2024" 
        data-max-date="12/31/2024">
 ```
 
-### 5. Vacation Booking (7-30 day trips)
+### 6. Vacation Booking (7-30 day trips)
 ```html
 <label>Start Date:</label>
 <input data-calendar 
@@ -214,7 +221,7 @@ Override colors using CSS custom properties:
        id="vacation-end">
 ```
 
-### 6. Event Planning (Block Holidays)
+### 7. Event Planning (Block Holidays)
 ```html
 <input data-calendar 
        data-disabled-dates="12/25/2024,12/26/2024,01/01/2025"
@@ -223,14 +230,14 @@ Override colors using CSS custom properties:
        data-max-date="12/31/2024">
 ```
 
-### 7. Medical Appointments (Weekdays, Future Only)
+### 8. Medical Appointments (Weekdays, Future Only)
 ```html
 <input data-calendar 
        data-business-days-only="true"
-       data-min-date="<!-- Today's date dynamically set -->">
+       data-no-past-dates="true">
 ```
 
-### 8. Rental Period (Min 1 day, Max 2 weeks)
+### 9. Rental Period (Min 1 day, Max 2 weeks)
 ```html
 <label>Pickup Date:</label>
 <input data-calendar 

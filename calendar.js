@@ -390,6 +390,7 @@
             this.minOffset = sanitizeAttribute(this.input.dataset.minOffset || '');
             this.maxOffset = sanitizeAttribute(this.input.dataset.maxOffset || '');
             this.businessDaysOnly = this.input.dataset.businessDaysOnly === 'true';
+            this.noPastDates = this.input.dataset.noPastDates === 'true';
             
             this.picker = null;
             this.monthYearElement = null;
@@ -581,6 +582,18 @@
             if (this.businessDaysOnly) {
                 const dayOfWeek = date.getDay();
                 if (dayOfWeek === 0 || dayOfWeek === 6) { // Sunday or Saturday
+                    return true;
+                }
+            }
+            
+            // No past dates check
+            if (this.noPastDates) {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); // Reset time to start of day
+                const checkDate = new Date(date);
+                checkDate.setHours(0, 0, 0, 0); // Reset time to start of day
+                
+                if (checkDate < today) {
                     return true;
                 }
             }
