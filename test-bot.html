@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Test - No Past Dates</title>
+</head>
+<body>
+    <h1>Bot Implementation Test</h1>
+    
+    <p>This is exactly what the bot should implement:</p>
+    
+    <input data-calendar data-no-past-dates="true" placeholder="Select date">
+    
+    <script src="https://cdn.jsdelivr.net/gh/NerovaAutomation/nerovaDatePicker@9efd00c/calendar.js"></script>
+    
+    <script>
+        // Debug: Check if the feature is loaded
+        setTimeout(() => {
+            const input = document.querySelector('[data-calendar]');
+            if (input && input.calendar) {
+                console.log('Calendar initialized:', input.calendar);
+                console.log('noPastDates setting:', input.calendar.noPastDates);
+            } else {
+                console.log('Calendar not initialized');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
