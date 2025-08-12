@@ -1,5 +1,28 @@
 (function() {
     'use strict';
+
+    // Polyfills for Safari and older browsers
+    (function() {
+        // CustomEvent constructor
+        if (typeof window.CustomEvent !== 'function') {
+            function CustomEvent(event, params) {
+                params = params || { bubbles: false, cancelable: false, detail: undefined };
+                var evt = document.createEvent('CustomEvent');
+                evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+                return evt;
+            }
+            CustomEvent.prototype = window.Event && window.Event.prototype;
+            window.CustomEvent = CustomEvent;
+        }
+        // Element.matches
+        if (typeof Element !== 'undefined' && Element.prototype && !Element.prototype.matches) {
+            Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+        }
+        // NodeList.forEach
+        if (window.NodeList && !NodeList.prototype.forEach) {
+            NodeList.prototype.forEach = Array.prototype.forEach;
+        }
+    })();
     
     // Security: Prevent XSS and ensure safe DOM manipulation
     function sanitizeHTML(str) {
@@ -14,6 +37,19 @@
         return str.replace(/[<>"'&]/g, '');
     }
     
+    // Create events safely across browsers (Safari fallback)
+    function createSafeEvent(type, options) {
+        try {
+            return new Event(type, options || { bubbles: true });
+        } catch (e) {
+            var evt = document.createEvent('Event');
+            var bubbles = options && typeof options.bubbles === 'boolean' ? options.bubbles : true;
+            var cancelable = options && typeof options.cancelable === 'boolean' ? options.cancelable : false;
+            evt.initEvent(type, bubbles, cancelable);
+            return evt;
+        }
+    }
+
     function validateElement(element) {
         return element && element.nodeType === Node.ELEMENT_NODE;
     }
@@ -484,13 +520,22 @@
         }
         
         hasThemeClass(element) {
-            return element.classList && (
+            if (!element || !element.classList) return false;
+            if (
                 element.classList.contains('dark-theme') ||
                 element.classList.contains('red-theme') ||
                 element.classList.contains('green-theme') ||
-                element.classList.contains('blue-theme') ||
-                Array.from(element.classList).some(cls => cls.includes('theme'))
-            );
+                element.classList.contains('blue-theme')
+            ) {
+                return true;
+            }
+            for (var i = 0; i < element.classList.length; i++) {
+                var className = element.classList[i];
+                if (className && className.indexOf('theme') !== -1) {
+                    return true;
+                }
+            }
+            return false;
         }
         
         setDefaultDate() {
@@ -685,8 +730,10 @@
             if (!date || isNaN(date.getTime())) return '';
             
             const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const day = date.getDate().toString().padStart(2, '0');
+            var m = (date.getMonth() + 1).toString();
+            var d = date.getDate().toString();
+            var month = m.length < 2 ? ('0' + m) : m;
+            var day = d.length < 2 ? ('0' + d) : d;
             
             return `${year}-${month}-${day}`;
         }
@@ -781,14 +828,14 @@
                             if (refDate && !this.isDateDisabled(refDate)) {
                                 this.selectedDate = new Date(refDate);
                                 this.input.value = this.formatDate(this.selectedDate);
-                                this.input.dispatchEvent(new Event('change', { bubbles: true }));
+                                this.input.dispatchEvent(createSafeEvent('change', { bubbles: true }));
                             }
                         }
                         // Handle auto-clear: clear invalid dates if enabled
                         else if (this.autoClear && this.selectedDate && this.isDateDisabled(this.selectedDate)) {
                             this.selectedDate = null;
                             this.input.value = '';
-                            this.input.dispatchEvent(new Event('change', { bubbles: true }));
+                            this.input.dispatchEvent(createSafeEvent('change', { bubbles: true }));
                         }
                         this.render();
                     });
@@ -806,14 +853,14 @@
                             if (refDate && !this.isDateDisabled(refDate)) {
                                 this.selectedDate = new Date(refDate);
                                 this.input.value = this.formatDate(this.selectedDate);
-                                this.input.dispatchEvent(new Event('change', { bubbles: true }));
+                                this.input.dispatchEvent(createSafeEvent('change', { bubbles: true }));
                             }
                         }
                         // Handle auto-clear: clear invalid dates if enabled
                         else if (this.autoClear && this.selectedDate && this.isDateDisabled(this.selectedDate)) {
                             this.selectedDate = null;
                             this.input.value = '';
-                            this.input.dispatchEvent(new Event('change', { bubbles: true }));
+                            this.input.dispatchEvent(createSafeEvent('change', { bubbles: true }));
                         }
                         this.render();
                     });
@@ -822,28 +869,29 @@
         }
         
         setupTouchEvents() {
-            // Improve touch feedback for all clickable elements
-            const touchElements = [
-                ...this.picker.querySelectorAll('.calendar-nav-btn'),
-                ...this.picker.querySelectorAll('.calendar-year-btn'),
-                this.monthYearElement,
-                this.cancelBtn,
-                this.okBtn
-            ];
+            // Improve touch feedback for all clickable elements (avoid spread on NodeList)
+            var navButtons = this.picker.querySelectorAll('.calendar-nav-btn');
+            var yearButtons = this.picker.querySelectorAll('.calendar-year-btn');
+            var touchElements = [];
+            for (var i = 0; i < navButtons.length; i++) { touchElements.push(navButtons[i]); }
+            for (var j = 0; j < yearButtons.length; j++) { touchElements.push(yearButtons[j]); }
+            touchElements.push(this.monthYearElement);
+            touchElements.push(this.cancelBtn);
+            touchElements.push(this.okBtn);
             
-            touchElements.forEach(element => {
-                element.addEventListener('touchstart', (e) => {
-                    element.style.opacity = '0.7';
+            for (var k = 0; k < touchElements.length; k++) {
+                var element = touchElements[k];
+                if (!element || !element.addEventListener) continue;
+                element.addEventListener('touchstart', function() {
+                    this.style.opacity = '0.7';
                 }, { passive: true });
-                
-                element.addEventListener('touchend', (e) => {
-                    element.style.opacity = '';
+                element.addEventListener('touchend', function() {
+                    this.style.opacity = '';
                 }, { passive: true });
-                
-                element.addEventListener('touchcancel', (e) => {
-                    element.style.opacity = '';
+                element.addEventListener('touchcancel', function() {
+                    this.style.opacity = '';
                 }, { passive: true });
-            });
+            }
             
             // Prevent context menu on long press for calendar days
             this.gridElement.addEventListener('contextmenu', (e) => {
@@ -905,9 +953,14 @@
             this.yearDisplay.textContent = this.viewDate.getFullYear();
             
             // Update selected month
-            this.monthPicker.querySelectorAll('.calendar-month-option').forEach((option, index) => {
-                option.classList.toggle('selected', index === this.viewDate.getMonth());
-            });
+            var options = this.monthPicker.querySelectorAll('.calendar-month-option');
+            for (var i = 0; i < options.length; i++) {
+                if (i === this.viewDate.getMonth()) {
+                    options[i].classList.add('selected');
+                } else {
+                    options[i].classList.remove('selected');
+                }
+            }
         }
         
         render() {
@@ -918,12 +971,12 @@
             this.gridElement.innerHTML = '';
             
             // Add weekday headers
-            this.weekdays.forEach(day => {
+            for (var w = 0; w < this.weekdays.length; w++) {
                 const dayElement = document.createElement('div');
                 dayElement.className = 'calendar-weekday';
-                dayElement.textContent = day;
+                dayElement.textContent = this.weekdays[w];
                 this.gridElement.appendChild(dayElement);
-            });
+            }
             
             // Get first day of month and number of days
             const firstDay = new Date(this.viewDate.getFullYear(), this.viewDate.getMonth(), 1);
@@ -988,10 +1041,12 @@
             const inputRect = this.input.getBoundingClientRect();
             const isMobile = window.innerWidth <= 768;
             const pickerWidth = isMobile ? 260 : 220;
+            const scrollY = (typeof window.scrollY === 'number') ? window.scrollY : (window.pageYOffset || document.documentElement.scrollTop || 0);
+            const scrollX = (typeof window.scrollX === 'number') ? window.scrollX : (window.pageXOffset || document.documentElement.scrollLeft || 0);
             
             // Always position below input
-            let top = inputRect.bottom + window.scrollY + 5;
-            let left = inputRect.left + window.scrollX;
+            let top = inputRect.bottom + scrollY + 5;
+            let left = inputRect.left + scrollX;
             
             if (isMobile) {
                 // Center horizontally on mobile if screen is small
@@ -1039,9 +1094,9 @@
             if (this.selectedDate) {
                 this.input.value = this.formatDate(this.selectedDate);
                 
-                // Trigger change event
-                this.input.dispatchEvent(new Event('change', { bubbles: true }));
-                this.input.dispatchEvent(new Event('input', { bubbles: true }));
+                // Trigger change/input events
+                this.input.dispatchEvent(createSafeEvent('change', { bubbles: true }));
+                this.input.dispatchEvent(createSafeEvent('input', { bubbles: true }));
             }
             
             this.hide();
@@ -1057,9 +1112,10 @@
     // Auto-initialize all inputs with data-calendar attribute
     function initializeCalendars() {
         const inputs = document.querySelectorAll('input[data-calendar]');
-        inputs.forEach(input => {
+        for (var i = 0; i < inputs.length; i++) {
+            var input = inputs[i];
             // Skip if already initialized
-            if (input.calendar) return;
+            if (input.calendar) continue;
             
             // Make input readonly to prevent typing
             input.readOnly = true;
@@ -1067,7 +1123,7 @@
             
             // Initialize calendar
             input.calendar = new Calendar(input);
-        });
+        }
     }
     
     // Initialize on DOM ready
@@ -1081,8 +1137,10 @@
     if (window.MutationObserver) {
         const observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
-                mutation.addedNodes.forEach(function(node) {
-                    if (node.nodeType === 1) { // Element node
+                var added = mutation.addedNodes;
+                for (var i = 0; i < added.length; i++) {
+                    var node = added[i];
+                    if (node && node.nodeType === 1) { // Element node
                         if (node.matches && node.matches('input[data-calendar]')) {
                             if (!node.calendar) {
                                 node.readOnly = true;
@@ -1091,25 +1149,32 @@
                             }
                         }
                         // Check children too
-                        const childInputs = node.querySelectorAll && node.querySelectorAll('input[data-calendar]');
-                        if (childInputs) {
-                            childInputs.forEach(input => {
+                        var childInputs = node.querySelectorAll && node.querySelectorAll('input[data-calendar]');
+                        if (childInputs && childInputs.length) {
+                            for (var j = 0; j < childInputs.length; j++) {
+                                var input = childInputs[j];
                                 if (!input.calendar) {
                                     input.readOnly = true;
                                     input.style.cursor = 'pointer';
                                     input.calendar = new Calendar(input);
                                 }
-                            });
+                            }
                         }
                     }
-                });
+                }
             });
         });
         
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
+        if (document.body) {
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        } else {
+            document.addEventListener('DOMContentLoaded', function() {
+                observer.observe(document.body, { childList: true, subtree: true });
+            });
+        }
     }
     
     // Expose Calendar class globally for manual initialization if needed

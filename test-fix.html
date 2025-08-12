@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Auto-Clear Fix</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input {
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+            max-width: 100%;
+        }
+        
+        .instructions {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .test-case {
+            background: #fff8dc;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Auto-Clear Fix Test</h1>
+    
+    <div class="instructions">
+        <h3>🧪 Test All Three Behaviors:</h3>
+        <p>Select pickup dates to see how each return date input behaves differently!</p>
+    </div>
+    
+    <div class="form-group">
+        <label for="pickup">Pickup Date:</label>
+        <input id="pickup" data-calendar placeholder="Select pickup date">
+    </div>
+    
+    <div class="test-case">
+        <h3>1️⃣ Default Behavior (No Auto Actions)</h3>
+        <div class="form-group">
+            <label for="return1">Return Date:</label>
+            <input id="return1" data-calendar data-min-offset="pickup:0" placeholder="Manual only">
+        </div>
+        <p><strong>Behavior:</strong> Nothing happens automatically. User manually selects return date.</p>
+    </div>
+    
+    <div class="test-case">
+        <h3>2️⃣ Auto-Clear Behavior</h3>
+        <div class="form-group">
+            <label for="return2">Return Date (Auto-Clear):</label>
+            <input id="return2" data-calendar data-min-offset="pickup:0" data-auto-clear="true" placeholder="Clears when invalid">
+        </div>
+        <p><strong>Behavior:</strong> If return date becomes invalid, it automatically clears.</p>
+    </div>
+    
+    <div class="test-case">
+        <h3>3️⃣ Auto-Mirror Behavior (Smart)</h3>
+        <div class="form-group">
+            <label for="return3">Return Date (Auto-Mirror):</label>
+            <input id="return3" data-calendar data-min-offset="pickup:0" data-auto-mirror="true" placeholder="Smart mirror">
+        </div>
+        <p><strong>Behavior:</strong> Only mirrors pickup date when return date becomes invalid. If return date is still valid, it stays unchanged.</p>
+        <p><em>Test: Select return date Aug 20, then pickup Aug 15 (stays Aug 20). Then pickup Aug 25 (mirrors to Aug 25).</em></p>
+    </div>
+    
+    <script src="./calendar.js"></script>
+    
+    <script>
+        // Debug logging
+        (function() {
+            var pickup = document.getElementById('pickup');
+            if (pickup) {
+                pickup.addEventListener('change', function() {
+                    console.log('Pickup date changed to:', this.value);
+                });
+            }
+            var returnIds = ['return1', 'return2', 'return3'];
+            for (var i = 0; i < returnIds.length; i++) {
+                var el = document.getElementById(returnIds[i]);
+                if (el) {
+                    el.addEventListener('change', function() {
+                        console.log('Return date changed to:', this.value, 'from', this.id);
+                    });
+                }
+            }
+        })();
+    </script>
+</body>
+</html>
