@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar CDN Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input {
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+            max-width: 100%;
+        }
+        
+        /* Custom theme example */
+        .dark-theme {
+            --calendar-bg: #2d3748;
+            --calendar-border: #4a5568;
+            --calendar-text: #e2e8f0;
+            --calendar-selected: #4299e1;
+            --calendar-hover: #4a5568;
+            --calendar-disabled: #718096;
+            --calendar-disabled-text: #a0aec0;
+            --calendar-today: #48bb78;
+            --calendar-other-month: #718096;
+            --calendar-shadow: rgba(0, 0, 0, 0.8);
+            --calendar-header-bg: #4a5568;
+            --calendar-header-text: #e2e8f0;
+        }
+        
+        .red-theme {
+            --calendar-selected: #e53e3e;
+            --calendar-today: #c53030;
+        }
+        
+        .green-theme {
+            --calendar-selected: #38a169;
+            --calendar-today: #2f855a;
+        }
+        
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .demo-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calendar CDN Demo</h1>
+    
+    <div class="demo-section">
+        <h2>Basic Usage</h2>
+        <p>Just add <code>data-calendar</code> to any input field:</p>
+        
+        <div class="form-group">
+            <label for="basic">Basic Calendar:</label>
+            <input id="basic" data-calendar placeholder="Click to select date">
+        </div>
+        
+        <div class="form-group">
+            <label for="auto-default">Auto-Default to Today:</label>
+            <input id="auto-default" data-calendar data-auto-default="true" placeholder="Auto-set to today">
+        </div>
+    </div>
+    
+    <div class="demo-section">
+        <h2>Business Constraints</h2>
+        <p>Use constraints for business rules:</p>
+        
+        <div class="form-group">
+            <label for="business-days">Business Days Only:</label>
+            <input id="business-days" data-calendar data-business-days-only="true" placeholder="Weekdays only">
+        </div>
+        
+        <div class="form-group">
+            <label for="date-range">This Year Only:</label>
+            <input id="date-range" data-calendar 
+                   data-min-date="01/01/2024" 
+                   data-max-date="12/31/2024" 
+                   placeholder="2024 only">
+        </div>
+        
+        <div class="form-group">
+            <label for="no-holidays">Block Holidays:</label>
+            <input id="no-holidays" data-calendar 
+                   data-disabled-dates="12/25/2024,01/01/2025,07/04/2024"
+                   placeholder="No holidays">
+        </div>
+    </div>
+    
+    <div class="demo-section">
+        <h2>Booking System Example</h2>
+        <p>Start and end dates with minimum gap:</p>
+        
+        <div class="form-group">
+            <label for="trip-start">Trip Start Date:</label>
+            <input id="trip-start" data-calendar 
+                   data-auto-default="true"
+                   data-business-days-only="true"
+                   placeholder="Start date">
+        </div>
+        
+        <div class="form-group">
+            <label for="trip-end">Trip End Date (7-30 days later):</label>
+            <input id="trip-end" data-calendar 
+                   data-min-offset="trip-start:7"
+                   data-max-offset="trip-start:30"
+                   data-business-days-only="true"
+                   placeholder="End date">
+        </div>
+    </div>
+    
+    <div class="demo-section dark-theme">
+        <h2>Dark Theme</h2>
+        <p>Customize colors with CSS variables:</p>
+        
+        <div class="form-group">
+            <label for="dark" style="color: white;">Dark Theme Calendar:</label>
+            <input id="dark" data-calendar data-auto-default="true" 
+                   placeholder="Dark theme" 
+                   style="background: #4a5568; color: white; border-color: #718096;">
+        </div>
+        
+        <pre style="background: #1a202c; color: #e2e8f0; margin-top: 15px;"><code>.dark-theme {
+    --calendar-bg: #2d3748;
+    --calendar-border: #4a5568;
+    --calendar-text: #e2e8f0;
+    --calendar-selected: #4299e1;
+    --calendar-hover: #4a5568;
+    --calendar-today: #48bb78;
+}</code></pre>
+    </div>
+    
+    <div class="demo-section red-theme">
+        <h2>Red Theme</h2>
+        <div class="form-group">
+            <label for="red">Red Theme Calendar:</label>
+            <input id="red" data-calendar data-auto-default="true" placeholder="Red theme">
+        </div>
+    </div>
+    
+    <div class="demo-section green-theme">
+        <h2>Green Theme</h2>
+        <div class="form-group">
+            <label for="green">Green Theme Calendar:</label>
+            <input id="green" data-calendar data-auto-default="true" placeholder="Green theme">
+        </div>
+    </div>
+    
+    <div class="demo-section">
+        <h2>Implementation</h2>
+        <p><strong>Step 1:</strong> Add the script to your HTML:</p>
+        <pre><code>&lt;script src="https://cdn.jsdelivr.net/gh/NerovaAutomation/nerovaCalendar@main/calendar.js"&gt;&lt;/script&gt;</code></pre>
+        
+        <p><strong>Step 2:</strong> Add data attributes to inputs:</p>
+        <pre><code>&lt;input data-calendar data-auto-default="true" placeholder="Select date"&gt;</code></pre>
+        
+        <p><strong>Step 3 (Optional):</strong> Customize with CSS variables:</p>
+        <pre><code>:root {
+    --calendar-selected: #your-color;
+    --calendar-bg: #your-bg-color;
+}</code></pre>
+    </div>
+    
+    <!-- Load the Calendar script -->
+    <script src="./calendar.js"></script>
+    
+    <script>
+        // Demo: Show selected values
+        document.querySelectorAll('input[data-calendar]').forEach(input => {
+            input.addEventListener('change', function() {
+                console.log(`Selected date: ${this.value} (from ${this.id || 'unnamed'} input)`);
+            });
+        });
+    </script>
+</body>
+</html>
