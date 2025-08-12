@@ -45,7 +45,7 @@
             z-index: 10000;
             border: 1px solid var(--calendar-border);
             font-family: Arial, sans-serif;
-            min-width: 280px;
+            width: 220px;
             user-select: none;
         }
         
@@ -53,19 +53,19 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding: 8px 12px;
+            margin-bottom: 10px;
+            padding: 6px 8px;
             background-color: var(--calendar-header-bg);
-            border-radius: 6px;
+            border-radius: 4px;
         }
         
         .calendar-nav-btn {
             background: none;
             border: none;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 2px 6px;
+            border-radius: 3px;
             color: var(--calendar-header-text);
             transition: background-color 0.2s ease;
         }
@@ -80,39 +80,109 @@
         }
         
         .calendar-month-year {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             color: var(--calendar-header-text);
-            margin: 0 15px;
-            min-width: 140px;
+            margin: 0 8px;
+            min-width: 100px;
             text-align: center;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .calendar-month-year:hover {
+            background-color: var(--calendar-hover);
+        }
+        
+        .calendar-month-picker {
+            position: absolute;
+            background-color: var(--calendar-bg);
+            border: 1px solid var(--calendar-border);
+            border-radius: 4px;
+            padding: 8px;
+            box-shadow: 0 2px 10px var(--calendar-shadow);
+            z-index: 10001;
+            display: none;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            width: 180px;
+        }
+        
+        .calendar-month-option {
+            padding: 6px 8px;
+            cursor: pointer;
+            font-size: 11px;
+            text-align: center;
+            border-radius: 3px;
+            transition: background-color 0.2s ease;
+            color: var(--calendar-text);
+        }
+        
+        .calendar-month-option:hover {
+            background-color: var(--calendar-hover);
+        }
+        
+        .calendar-month-option.selected {
+            background-color: var(--calendar-selected);
+            color: white;
+        }
+        
+        .calendar-year-controls {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 4px;
+        }
+        
+        .calendar-year-btn {
+            background: none;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: var(--calendar-header-text);
+            transition: background-color 0.2s ease;
+        }
+        
+        .calendar-year-btn:hover {
+            background-color: var(--calendar-hover);
+        }
+        
+        .calendar-year-display {
+            font-weight: bold;
+            color: var(--calendar-header-text);
         }
         
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-            margin-bottom: 15px;
+            gap: 1px;
+            margin-bottom: 8px;
         }
         
         .calendar-weekday {
             text-align: center;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: bold;
-            padding: 8px 4px;
+            padding: 4px 2px;
             color: var(--calendar-header-text);
             background-color: var(--calendar-header-bg);
-            border-radius: 4px;
+            border-radius: 2px;
         }
         
         .calendar-day {
             text-align: center;
-            padding: 8px 4px;
+            padding: 4px 2px;
             cursor: pointer;
-            font-size: 14px;
-            border-radius: 4px;
+            font-size: 12px;
+            border-radius: 2px;
             transition: all 0.2s ease;
-            min-height: 32px;
+            min-height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -130,7 +200,7 @@
         }
         
         .calendar-day.today {
-            border: 2px solid var(--calendar-today);
+            border: 1px solid var(--calendar-today);
             font-weight: bold;
         }
         
@@ -148,17 +218,18 @@
         
         .calendar-buttons {
             display: flex;
-            gap: 8px;
-            margin-top: 10px;
+            gap: 4px;
+            margin-top: 8px;
         }
         
         .calendar-btn {
-            padding: 8px 16px;
+            padding: 6px 8px;
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 11px;
             transition: opacity 0.2s ease;
+            flex: 1;
         }
         
         .calendar-btn-cancel {
@@ -166,11 +237,6 @@
             color: #666;
         }
         
-        .calendar-btn-today {
-            background-color: var(--calendar-today);
-            color: white;
-            flex: 1;
-        }
         
         .calendar-btn-ok {
             background-color: var(--calendar-selected);
@@ -179,6 +245,115 @@
         
         .calendar-btn:hover {
             opacity: 0.8;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .calendar-popup {
+                width: 260px;
+                padding: 18px;
+            }
+            
+            .calendar-header {
+                margin-bottom: 12px;
+                padding: 8px 10px;
+            }
+            
+            .calendar-nav-btn {
+                font-size: 18px;
+                padding: 4px 8px;
+                min-height: 32px;
+                min-width: 32px;
+            }
+            
+            .calendar-month-year {
+                font-size: 15px;
+                padding: 4px 8px;
+                min-height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .calendar-weekday {
+                font-size: 11px;
+                padding: 6px 3px;
+            }
+            
+            .calendar-day {
+                padding: 8px 4px;
+                font-size: 14px;
+                min-height: 32px;
+                border-radius: 4px;
+            }
+            
+            .calendar-day.today {
+                border: 2px solid var(--calendar-today);
+            }
+            
+            .calendar-buttons {
+                gap: 8px;
+                margin-top: 12px;
+            }
+            
+            .calendar-btn {
+                padding: 10px 12px;
+                font-size: 14px;
+                min-height: 40px;
+                border-radius: 6px;
+            }
+            
+            .calendar-month-picker {
+                width: 200px;
+                padding: 12px;
+                gap: 6px;
+            }
+            
+            .calendar-month-option {
+                padding: 10px 8px;
+                font-size: 13px;
+                min-height: 36px;
+                border-radius: 4px;
+            }
+            
+            .calendar-year-btn {
+                font-size: 16px;
+                padding: 4px 8px;
+                min-height: 32px;
+                min-width: 32px;
+            }
+            
+            .calendar-year-display {
+                font-size: 15px;
+            }
+        }
+        
+        /* Touch-specific optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .calendar-day {
+                min-height: 36px;
+                padding: 10px 4px;
+            }
+            
+            .calendar-btn {
+                min-height: 44px;
+                padding: 12px 16px;
+            }
+            
+            .calendar-nav-btn, .calendar-year-btn {
+                min-height: 36px;
+                min-width: 36px;
+            }
+            
+            .calendar-month-option {
+                min-height: 40px;
+                padding: 12px 8px;
+            }
+            
+            .calendar-month-year {
+                min-height: 36px;
+                padding: 6px 10px;
+            }
         }
         
     `;
@@ -237,6 +412,7 @@
         
         init() {
             this.createPicker();
+            this.createMonthPicker();
             this.setupEventListeners();
             this.setDefaultDate();
             this.render();
@@ -261,10 +437,16 @@
                     <div class="calendar-month-year" id="calendar-month-year"></div>
                     <button class="calendar-nav-btn" id="calendar-next">›</button>
                 </div>
+                <div class="calendar-month-picker" id="calendar-month-picker">
+                    <div class="calendar-year-controls">
+                        <button class="calendar-year-btn" id="calendar-year-prev">‹</button>
+                        <div class="calendar-year-display" id="calendar-year-display"></div>
+                        <button class="calendar-year-btn" id="calendar-year-next">›</button>
+                    </div>
+                </div>
                 <div class="calendar-grid" id="calendar-grid"></div>
                 <div class="calendar-buttons">
                     <button class="calendar-btn calendar-btn-cancel">Cancel</button>
-                    <button class="calendar-btn calendar-btn-today">Today</button>
                     <button class="calendar-btn calendar-btn-ok">OK</button>
                 </div>
             `;
@@ -275,10 +457,27 @@
             this.monthYearElement = this.picker.querySelector('#calendar-month-year');
             this.prevBtn = this.picker.querySelector('#calendar-prev');
             this.nextBtn = this.picker.querySelector('#calendar-next');
+            this.monthPicker = this.picker.querySelector('#calendar-month-picker');
+            this.yearDisplay = this.picker.querySelector('#calendar-year-display');
+            this.yearPrevBtn = this.picker.querySelector('#calendar-year-prev');
+            this.yearNextBtn = this.picker.querySelector('#calendar-year-next');
             this.gridElement = this.picker.querySelector('#calendar-grid');
             this.cancelBtn = this.picker.querySelector('.calendar-btn-cancel');
-            this.todayBtn = this.picker.querySelector('.calendar-btn-today');
             this.okBtn = this.picker.querySelector('.calendar-btn-ok');
+        }
+        
+        createMonthPicker() {
+            // Populate month picker with month options
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                               'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            monthNames.forEach((month, index) => {
+                const monthOption = document.createElement('div');
+                monthOption.className = 'calendar-month-option';
+                monthOption.textContent = month;
+                monthOption.dataset.month = index;
+                this.monthPicker.appendChild(monthOption);
+            });
         }
         
         hasThemeClass(element) {
@@ -462,13 +661,14 @@
             });
             
             this.cancelBtn.addEventListener('click', () => this.hide());
-            this.todayBtn.addEventListener('click', () => this.selectToday());
             this.okBtn.addEventListener('click', () => this.selectDate());
             
             // Close picker when clicking outside
             document.addEventListener('click', (e) => {
                 if (!this.picker.contains(e.target) && e.target !== this.input) {
                     this.hide();
+                } else if (!this.monthPicker.contains(e.target) && e.target !== this.monthYearElement) {
+                    this.hideMonthPicker();
                 }
             });
             
@@ -483,8 +683,30 @@
             this.prevBtn.addEventListener('click', () => this.previousMonth());
             this.nextBtn.addEventListener('click', () => this.nextMonth());
             
+            // Month/Year picker
+            this.monthYearElement.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleMonthPicker();
+            });
+            
+            this.yearPrevBtn.addEventListener('click', () => this.previousYear());
+            this.yearNextBtn.addEventListener('click', () => this.nextYear());
+            
+            // Month selection
+            this.monthPicker.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (e.target.classList.contains('calendar-month-option')) {
+                    const month = parseInt(e.target.dataset.month);
+                    this.viewDate.setMonth(month);
+                    this.hideMonthPicker();
+                    this.render();
+                }
+            });
+            
             // Grid clicks (day selection)
             this.gridElement.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent event bubbling that causes auto-close
+                
                 if (e.target.classList.contains('calendar-day') && 
                     !e.target.classList.contains('disabled') &&
                     !e.target.classList.contains('other-month')) {
@@ -495,6 +717,7 @@
                     if (!this.isDateDisabled(newDate)) {
                         this.selectedDate = newDate;
                         this.render();
+                        // Calendar stays open for user to click OK
                     }
                 }
             });
@@ -505,6 +728,9 @@
                     this.positionPicker();
                 }
             });
+            
+            // Add touch event handling for mobile
+            this.setupTouchEvents();
             
             // Listen for changes in referenced inputs (for offset constraints)
             if (this.minOffset) {
@@ -528,6 +754,41 @@
             }
         }
         
+        setupTouchEvents() {
+            // Improve touch feedback for all clickable elements
+            const touchElements = [
+                ...this.picker.querySelectorAll('.calendar-nav-btn'),
+                ...this.picker.querySelectorAll('.calendar-year-btn'),
+                this.monthYearElement,
+                this.cancelBtn,
+                this.okBtn
+            ];
+            
+            touchElements.forEach(element => {
+                element.addEventListener('touchstart', (e) => {
+                    element.style.opacity = '0.7';
+                }, { passive: true });
+                
+                element.addEventListener('touchend', (e) => {
+                    element.style.opacity = '';
+                }, { passive: true });
+                
+                element.addEventListener('touchcancel', (e) => {
+                    element.style.opacity = '';
+                }, { passive: true });
+            });
+            
+            // Prevent context menu on long press for calendar days
+            this.gridElement.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+            });
+            
+            // Prevent context menu on month options
+            this.monthPicker.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+            });
+        }
+        
         previousMonth() {
             this.viewDate.setMonth(this.viewDate.getMonth() - 1);
             this.render();
@@ -538,12 +799,48 @@
             this.render();
         }
         
-        selectToday() {
-            if (!this.isDateDisabled(this.today)) {
-                this.selectedDate = new Date(this.today);
-                this.viewDate = new Date(this.today);
-                this.render();
+        previousYear() {
+            this.viewDate.setFullYear(this.viewDate.getFullYear() - 1);
+            this.updateMonthPicker();
+        }
+        
+        nextYear() {
+            this.viewDate.setFullYear(this.viewDate.getFullYear() + 1);
+            this.updateMonthPicker();
+        }
+        
+        toggleMonthPicker() {
+            if (this.monthPicker.style.display === 'grid') {
+                this.hideMonthPicker();
+            } else {
+                this.showMonthPicker();
             }
+        }
+        
+        showMonthPicker() {
+            this.monthPicker.style.display = 'grid';
+            this.updateMonthPicker();
+            
+            // Position the month picker
+            const headerRect = this.monthYearElement.getBoundingClientRect();
+            const pickerRect = this.picker.getBoundingClientRect();
+            
+            this.monthPicker.style.top = '40px'; // Below the header
+            this.monthPicker.style.left = '50%';
+            this.monthPicker.style.transform = 'translateX(-50%)';
+        }
+        
+        hideMonthPicker() {
+            this.monthPicker.style.display = 'none';
+        }
+        
+        updateMonthPicker() {
+            this.yearDisplay.textContent = this.viewDate.getFullYear();
+            
+            // Update selected month
+            this.monthPicker.querySelectorAll('.calendar-month-option').forEach((option, index) => {
+                option.classList.toggle('selected', index === this.viewDate.getMonth());
+            });
         }
         
         render() {
@@ -622,24 +919,34 @@
         
         positionPicker() {
             const inputRect = this.input.getBoundingClientRect();
-            const pickerRect = this.picker.getBoundingClientRect();
+            const isMobile = window.innerWidth <= 768;
+            const pickerWidth = isMobile ? 260 : 220;
             
+            // Always position below input
             let top = inputRect.bottom + window.scrollY + 5;
             let left = inputRect.left + window.scrollX;
             
-            // Adjust if picker would go off screen
-            if (left + pickerRect.width > window.innerWidth) {
-                left = window.innerWidth - pickerRect.width - 10;
-            }
-            
-            if (left < 10) {
-                left = 10;
-            }
-            
-            // Check if picker would go below viewport
-            if (top + pickerRect.height > window.innerHeight + window.scrollY) {
-                // Show above input instead
-                top = inputRect.top + window.scrollY - pickerRect.height - 5;
+            if (isMobile) {
+                // Center horizontally on mobile if screen is small
+                const availableWidth = window.innerWidth - 20; // 10px margin on each side
+                if (pickerWidth > availableWidth) {
+                    left = 10;
+                    this.picker.style.width = (availableWidth) + 'px';
+                } else {
+                    left = Math.max(10, Math.min(
+                        window.innerWidth - pickerWidth - 10,
+                        inputRect.left + window.scrollX
+                    ));
+                }
+            } else {
+                // Desktop positioning
+                if (left + pickerWidth > window.innerWidth) {
+                    left = window.innerWidth - pickerWidth - 10;
+                }
+                
+                if (left < 10) {
+                    left = 10;
+                }
             }
             
             this.picker.style.top = top + 'px';
