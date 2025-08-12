@@ -4,17 +4,36 @@ A comprehensive, security-optimized calendar picker component that works anywher
 
 ## 🚀 Quick Start
 
-**1. Add the Script:**
+**Option 1: CDN**
 ```html
-<script src="https://cdn.jsdelivr.net/gh/NerovaAutomation/nerovaCalendar@main/calendar.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/NerovaAutomation/nerovaDatePicker@main/calendar.js"></script>
 ```
 
-**2. Add to Input Fields:**
+**Option 2: Direct File (Current Method)**
+```html
+<script src="./calendar.js"></script>
+```
+
+**Add to Input Fields:**
 ```html
 <input data-calendar placeholder="Select date">
 ```
 
 That's it! The calendar picker automatically initializes on all inputs with the `data-calendar` attribute.
+
+## 🤖 Bot Integration Instructions
+
+**For automated bot implementation, use this exact code:**
+```html
+<script src="https://cdn.jsdelivr.net/gh/NerovaAutomation/nerovaDatePicker@main/calendar.js"></script>
+<input data-calendar placeholder="Select date">
+```
+
+**Alternative local file method:**
+```html
+<script src="./calendar.js"></script>
+<input data-calendar placeholder="Select date">
+```
 
 ---
 
@@ -385,24 +404,24 @@ Use **MM/DD/YYYY** format in all data attributes:
 
 **Latest Version:**
 ```html
-<script src="https://cdn.jsdelivr.net/gh/NerovaAutomation/nerovaCalendar@main/calendar.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/NerovaAutomation/nerovaDatePicker@main/calendar.js"></script>
 ```
 
 **Specific Version (Recommended for Production):**
 ```html
-<script src="https://cdn.jsdelivr.net/gh/NerovaAutomation/nerovaCalendar@v1.0.0/calendar.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/NerovaAutomation/nerovaDatePicker@v1.0.0/calendar.js"></script>
 ```
 
 **Cache Busting:**
 ```html
-<script src="https://cdn.jsdelivr.net/gh/NerovaAutomation/nerovaCalendar@main/calendar.js?v=1"></script>
+<script src="https://cdn.jsdelivr.net/gh/NerovaAutomation/nerovaDatePicker@main/calendar.js?v=1"></script>
 ```
 
 ---
 
 ## 📞 Support
 
-- **GitHub**: [NerovaAutomation/nerovaCalendar](https://github.com/NerovaAutomation/nerovaCalendar)
+- **GitHub**: [NerovaAutomation/nerovaDatePicker](https://github.com/NerovaAutomation/nerovaDatePicker)
 - **Issues**: Report bugs or request features via GitHub Issues
 - **License**: MIT License - free for any use
 

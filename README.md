@@ -1,4 +1,4 @@
-# NerovaCalendar - Simple Date Picker Component
+# NerovaDatePicker - Simple Date Picker Component
 
 A lightweight, customizable calendar picker that works with any project using a single script tag.
 
@@ -17,7 +17,7 @@ A lightweight, customizable calendar picker that works with any project using a 
 ### 1. Add the Script
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/NerovaAutomation/nerovaCalendar@main/calendar.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/NerovaAutomation/nerovaDatePicker@main/calendar.js"></script>
 ```
 
 ### 2. Use on Any Input
