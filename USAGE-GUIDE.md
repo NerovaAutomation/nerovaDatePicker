@@ -227,6 +227,20 @@ Override colors using CSS custom properties:
 
 ---
 
+## 🗓️ Calendar Features
+
+### Quick Month Selection
+- **Click the month/year header** to open month picker
+- **Select any month** from the grid view
+- **Navigate years** with ‹ › buttons in month picker
+- **No Today button** - streamlined interface
+
+### Mobile Optimized
+- **Touch-friendly** - 44px+ touch targets
+- **Responsive design** - adapts to screen size
+- **Visual feedback** - opacity changes on touch
+- **Smart positioning** - stays within viewport
+
 ## 🔧 JavaScript Events & Methods
 
 ### Events
@@ -239,6 +253,26 @@ document.querySelector('[data-calendar]').addEventListener('change', function(e)
 // Listen for input events (real-time)
 document.querySelector('[data-calendar]').addEventListener('input', function(e) {
     console.log('Date changing:', e.target.value);
+});
+```
+
+### Integration Examples
+```javascript
+// Google Calendar API Integration
+const date = document.getElementById('event-date').value; // "12/25/2024"
+const time = document.getElementById('event-time').value; // "2:30 PM"
+const googleDateTime = new Date(date + ' ' + time).toISOString();
+
+// Database Storage
+const mysqlDateTime = date + ' ' + time; // "12/25/2024 2:30 PM"
+
+// Custom API
+fetch('/api/bookings', {
+    method: 'POST',
+    body: JSON.stringify({
+        date: date,
+        time: time
+    })
 });
 ```
 
@@ -328,11 +362,12 @@ Use **MM/DD/YYYY** format in all data attributes:
 
 ## ⚡ Performance & Compatibility
 
-- **File Size**: ~15KB minified
+- **File Size**: ~18KB minified
 - **Dependencies**: None (vanilla JavaScript)
 - **Browser Support**: Chrome 60+, Firefox 55+, Safari 12+, Edge 79+
-- **Mobile**: Fully responsive and touch-optimized
+- **Mobile**: Fully responsive and touch-optimized with 44px+ touch targets
 - **Framework Agnostic**: Works with React, Vue, Angular, vanilla HTML
+- **API Compatible**: Works with Google Calendar, booking systems, databases
 
 ---
 
