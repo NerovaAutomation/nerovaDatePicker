@@ -391,6 +391,8 @@
             this.maxOffset = sanitizeAttribute(this.input.dataset.maxOffset || '');
             this.businessDaysOnly = this.input.dataset.businessDaysOnly === 'true';
             this.noPastDates = this.input.dataset.noPastDates === 'true';
+            this.autoClear = this.input.dataset.autoClear === 'true';
+            this.autoMirror = this.input.dataset.autoMirror === 'true';
             
             this.picker = null;
             this.monthYearElement = null;
@@ -773,6 +775,21 @@
                 const refInput = document.getElementById(sanitizeAttribute(refInputId));
                 if (validateElement(refInput)) {
                     refInput.addEventListener('change', () => {
+                        // Handle auto-mirror: only mirror if current date becomes invalid
+                        if (this.autoMirror && this.selectedDate && this.isDateDisabled(this.selectedDate) && refInput.value) {
+                            const refDate = this.parseDate(refInput.value);
+                            if (refDate && !this.isDateDisabled(refDate)) {
+                                this.selectedDate = new Date(refDate);
+                                this.input.value = this.formatDate(this.selectedDate);
+                                this.input.dispatchEvent(new Event('change', { bubbles: true }));
+                            }
+                        }
+                        // Handle auto-clear: clear invalid dates if enabled
+                        else if (this.autoClear && this.selectedDate && this.isDateDisabled(this.selectedDate)) {
+                            this.selectedDate = null;
+                            this.input.value = '';
+                            this.input.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
                         this.render();
                     });
                 }
@@ -783,6 +800,21 @@
                 const refInput = document.getElementById(sanitizeAttribute(refInputId));
                 if (validateElement(refInput)) {
                     refInput.addEventListener('change', () => {
+                        // Handle auto-mirror: only mirror if current date becomes invalid
+                        if (this.autoMirror && this.selectedDate && this.isDateDisabled(this.selectedDate) && refInput.value) {
+                            const refDate = this.parseDate(refInput.value);
+                            if (refDate && !this.isDateDisabled(refDate)) {
+                                this.selectedDate = new Date(refDate);
+                                this.input.value = this.formatDate(this.selectedDate);
+                                this.input.dispatchEvent(new Event('change', { bubbles: true }));
+                            }
+                        }
+                        // Handle auto-clear: clear invalid dates if enabled
+                        else if (this.autoClear && this.selectedDate && this.isDateDisabled(this.selectedDate)) {
+                            this.selectedDate = null;
+                            this.input.value = '';
+                            this.input.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
                         this.render();
                     });
                 }
