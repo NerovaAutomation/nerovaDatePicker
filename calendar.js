@@ -520,9 +520,12 @@
         
         parseDate(dateStr) {
             // Security: Validate input
-            if (typeof dateStr !== 'string' || dateStr.length > 15) return null;
+            if (typeof dateStr !== 'string' || dateStr.length > 20) return null;
             
             try {
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                
                 // Try parsing as YYYY-MM-DD (ISO format)
                 if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
                     const date = new Date(dateStr + 'T00:00:00');
@@ -532,15 +535,31 @@
                 }
                 
                 // Try parsing as MM/DD/YYYY
-                const match = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-                if (match) {
-                    const month = parseInt(match[1]) - 1; // Month is 0-indexed
-                    const day = parseInt(match[2]);
-                    const year = parseInt(match[3]);
+                const mmddyyyyMatch = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+                if (mmddyyyyMatch) {
+                    const month = parseInt(mmddyyyyMatch[1]) - 1; // Month is 0-indexed
+                    const day = parseInt(mmddyyyyMatch[2]);
+                    const year = parseInt(mmddyyyyMatch[3]);
                     
                     if (month >= 0 && month <= 11 && day >= 1 && day <= 31 && year >= 1900 && year <= 2100) {
                         const date = new Date(year, month, day);
                         if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === day) {
+                            return date;
+                        }
+                    }
+                }
+                
+                // Try parsing as "Aug 12, 2025" format
+                const monthDayYearMatch = dateStr.match(/^([A-Za-z]{3})\s+(\d{1,2}),\s+(\d{4})$/);
+                if (monthDayYearMatch) {
+                    const monthName = monthDayYearMatch[1];
+                    const day = parseInt(monthDayYearMatch[2]);
+                    const year = parseInt(monthDayYearMatch[3]);
+                    
+                    const monthIndex = monthNames.indexOf(monthName);
+                    if (monthIndex !== -1 && day >= 1 && day <= 31 && year >= 1900 && year <= 2100) {
+                        const date = new Date(year, monthIndex, day);
+                        if (date.getFullYear() === year && date.getMonth() === monthIndex && date.getDate() === day) {
                             return date;
                         }
                     }
@@ -555,11 +574,14 @@
         formatDate(date) {
             if (!date || isNaN(date.getTime())) return '';
             
-            const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const day = date.getDate().toString().padStart(2, '0');
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                               'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             
-            return `${month}/${day}/${year}`;
+            const year = date.getFullYear();
+            const month = monthNames[date.getMonth()];
+            const day = date.getDate();
+            
+            return `${month} ${day}, ${year}`;
         }
         
         isDateDisabled(date) {
